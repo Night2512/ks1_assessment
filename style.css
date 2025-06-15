@@ -1,0 +1,220 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2, h3 {
+    color: #0056b3;
+}
+
+.section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #ccc;
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+.question-block {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.question-block p {
+    margin-bottom: 10px;
+}
+
+.question-block input[type="text"],
+.question-block input[type="number"],
+.question-block input[type="email"] { /* Added email input styling */
+    width: 80%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.question-block input.small-input {
+    width: 60px; /* For number bonds */
+    text-align: center;
+}
+
+.question-block label {
+    display: block;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.question-block input[type="radio"] {
+    margin-right: 8px;
+}
+
+.passage {
+    background-color: #e6f7ff;
+    border-left: 5px solid #007bff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
+    display: block;
+    width: 200px;
+    padding: 12px 20px;
+    margin: 30px auto 0;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.timer-display {
+    text-align: right;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #d9534f;
+    margin-bottom: 20px;
+}
+
+/* Results Section */
+.results-container {
+    margin-top: 40px;
+    padding: 30px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+.results-container h2 {
+    text-align: center;
+    color: #007bff;
+}
+
+.result-item {
+    padding: 10px 0;
+    border-bottom: 1px dashed #ccc;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.result-item p {
+    margin: 5px 0;
+}
+
+.result-item .correct {
+    color: green;
+}
+
+.result-item .incorrect {
+    color: red;
+}
+
+.result-item .expectation-meets {
+    color: #28a745; /* Green */
+    font-weight: bold;
+}
+.result-item .expectation-below {
+    color: #dc3545; /* Red */
+    font-weight: bold;
+}
+.result-item .expectation-above {
+    color: #007bff; /* Blue */
+    font-weight: bold;
+}
+
+#overallScore {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.5em;
+    color: #0056b3;
+}
+
+#overallExpectations {
+    text-align: center;
+    font-size: 1.8em;
+    margin-top: 10px;
+}
+
+/* Specific styles for info collection form */
+#infoCollection label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#infoCollection input[type="text"],
+#infoCollection input[type="email"] {
+    width: calc(100% - 20px); /* Adjust width to fit */
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#startAssessmentBtn {
+    background-color: #007bff; /* Blue button */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    transition: background-color 0.3s ease;
+}
+
+#startAssessmentBtn:hover {
+    background-color: #0056b3;
+}
+
+#sendEmailBtn {
+    background-color: #6c757d; /* Grey button for email */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    display: block;
+    width: 250px;
+    margin: 20px auto;
+    transition: background-color 0.3s ease;
+}
+
+#sendEmailBtn:hover {
+    background-color: #5a6268;
+}
+
+#emailStatus {
+    text-align: center;
+    font-weight: bold;
+}

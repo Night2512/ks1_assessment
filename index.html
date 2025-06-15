@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Stage 1 Assessment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Key Stage 1 Online Assessment</h1>
+
+        <div id="infoCollection" class="section">
+            <h2>Start Your Assessment</h2>
+            <p>Please provide the following information to begin the assessment:</p>
+            <form id="infoForm">
+                <div class="question-block">
+                    <label for="parentName">Parent's Name:</label>
+                    <input type="text" id="parentName" name="parentName" required>
+                </div>
+                <div class="question-block">
+                    <label for="childName">Child's Name:</label>
+                    <input type="text" id="childName" name="childName" required>
+                </div>
+                <div class="question-block">
+                    <label for="parentEmail">Parent's Email Address:</label>
+                    <input type="email" id="parentEmail" name="parentEmail" required>
+                </div>
+                <button type="submit" id="startAssessmentBtn">Start Assessment</button>
+            </form>
+        </div>
+
+        <div id="assessmentSection" style="display:none;">
+            <p class="timer-display">Time Left: <span id="time">15:00</span></p>
+            <p><strong>Total Time: 15 Minutes</strong></p>
+
+            <form id="assessmentForm">
+                <section class="section">
+                    <h2>Section 1: English</h2>
+                    <p><strong>Instructions:</strong> Read the passage carefully and answer the questions.</p>
+                    <div class="passage">
+                        <p>Lily loves animals. She has a fluffy white cat named Snowdrop. Snowdrop likes to play with a red ball of yarn. Lily also has a small, brown dog called Buster. Buster loves to run in the park and chase squirrels.</p>
+                    </div>
+
+                    <div class="question-block" id="q1">
+                        <h3>Question 1: Reading Comprehension</h3>
+                        <p>What is the cat's name?</p>
+                        <label><input type="radio" name="q1_answer" value="a"> a) Buster</label><br>
+                        <label><input type="radio" name="q1_answer" value="b"> b) Snowdrop</label><br>
+                        <label><input type="radio" name="q1_answer" value="c"> c) Lily</label>
+                    </div>
+
+                    <div class="question-block" id="q2">
+                        <h3>Question 2: Vocabulary</h3>
+                        <p>What colour is the cat?</p>
+                        <label><input type="radio" name="q2_answer" value="a"> a) Brown</label><br>
+                        <label><input type="radio" name="q2_answer" value="b"> b) Red</label><br>
+                        <label><input type="radio" name="q2_answer" value="c"> c) White</label>
+                    </div>
+
+                    <div class="question-block" id="q3">
+                        <h3>Question 3: Grammar - Plurals</h3>
+                        <p>Fill in the missing word: Lily has two fluffy <input type="text" name="q3_answer">. (cat)</p>
+                    </div>
+
+                    <div class="question-block" id="q4">
+                        <h3>Question 4: Spelling</h3>
+                        <p>Spell the word for the animal that chases squirrels in the park.</p>
+                        <input type="text" name="q4_answer">
+                    </div>
+
+                    <div class="question-block" id="q5">
+                        <h3>Question 5: Sentence Construction</h3>
+                        <p>Put the words in the correct order to make a sentence: park, in, run, loves, Buster, the</p>
+                        <input type="text" name="q5_answer">
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Section 2: Maths</h2>
+
+                    <div class="question-block" id="q6">
+                        <h3>Question 6: Counting</h3>
+                        <img src="images/13_apples.jpg" alt="13 apples" style="max-width: 150px; display: block; margin-bottom: 10px;">
+                        <p>How many apples are there?</p>
+                        <label><input type="radio" name="q6_answer" value="a"> a) 11</label><br>
+                        <label><input type="radio" name="q6_answer" value="b"> b) 13</label><br>
+                        <label><input type="radio" name="q6_answer" value="c"> c) 15</label>
+                    </div>
+
+                    <div class="question-block" id="q7">
+                        <h3>Question 7: Addition</h3>
+                        <p>What is 7 + 5?</p>
+                        <input type="number" name="q7_answer">
+                    </div>
+
+                    <div class="question-block" id="q8">
+                        <h3>Question 8: Subtraction</h3>
+                        <p>What is 10 - 3?</p>
+                        <input type="number" name="q8_answer">
+                    </div>
+
+                    <div class="question-block" id="q9">
+                        <h3>Question 9: Number Bonds to 10</h3>
+                        <p>5 + <input type="number" name="q9_answer" class="small-input"> = 10</p>
+                    </div>
+
+                    <div class="question-block" id="q10">
+                        <h3>question 10: Telling Time</h3>
+                        <img src="images/clock_3_oclock.jpg" alt="Clock showing 3 o'clock" style="max-width: 150px; display: block; margin-bottom: 10px;">
+                        <p>What time does the clock show?</p>
+                        <label><input type="radio" name="q10_answer" value="a"> a) 1 o'clock</label><br>
+                        <label><input type="radio" name="q10_answer" value="b"> b) 3 o'clock</label><br>
+                        <label><input type="radio" name="q10_answer" value="c"> c) 6 o'clock</label>
+                    </div>
+
+                    <div class="question-block" id="q11">
+                        <h3>Question 11: Simple Word Problem</h3>
+                        <p>Sarah has 6 red pens and 4 blue pens. How many pens does she have altogether?</p>
+                        <input type="number" name="q11_answer">
+                    </div>
+
+                    <div class="question-block" id="q12">
+                        <h3>Question 12: Fractions</h3>
+                        <img src="images/shaded_circle.jpg" alt="Circle with 1/4 shaded" style="max-width: 150px; display: block; margin-bottom: 10px;">
+                        <p>What fraction of the circle is shaded?</p>
+                        <label><input type="radio" name="q12_answer" value="a"> a) 1/2</label><br>
+                        <label><input type="radio" name="q12_answer" value="b"> b) 1/3</label><br>
+                        <label><input type="radio" name="q12_answer" value="c"> c) 1/4</label>
+                    </div>
+                </section>
+
+                <button type="submit">Submit Assessment</button>
+            </form>
+        </div>
+
+        <div id="results" class="results-container" style="display:none;">
+            <h2>Assessment Results</h2>
+            <div id="detailedResults"></div>
+            <h3 id="overallScore"></h3>
+            <h3 id="overallExpectations"></h3>
+            <button id="sendEmailBtn" style="display:none;">Send Results to Parents</button>
+            <p id="emailStatus" style="margin-top: 10px;"></p> </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
