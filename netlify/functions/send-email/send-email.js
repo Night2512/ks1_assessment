@@ -5,23 +5,29 @@ exports.handler = async (event) => {
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
 
-    const { parentName, childName, parentEmail, results } = JSON.parse(event.body);
+    // Updated to receive both text and HTML versions of results
+    const { parentName, childName, parentEmail, resultsText, resultsHtml } = JSON.parse(event.body);
 
     // --- Configuration for SMTP2GO ---
-    // IMPORTANT: Get these from Netlify Environment Variables for security!
-    // Set these in Netlify Dashboard: Site settings > Build & deploy > Environment variables
     const smtpHost = process.env.SMTP2GO_HOST || 'mail.smtp2go.com';
     const smtpPort = process.env.SMTP2GO_PORT || 2525; // Or 25, 8025, 587
     const smtpUser = process.env.SMTP2GO_USER;       // Your SMTP2GO username
     const smtpPass = process.env.SMTP2GO_PASSWORD;   // Your SMTP2GO API Key
 
-    const senderEmail = process.env.SENDER_EMAIL;	// Your verified sender email
-    const recipientEmail = process.env.RECIPIENT_EMAIL;	// Where results are sent
+    const senderEmail = process.env.SENDER_EMAIL || 'your_sending_email@example.com'; // Your verified sender email
+    const adminRecipientEmail = process.env.RECIPIENT_EMAIL; // Your admin email from Netlify environment variables
 
+    // Basic validation
     if (!smtpUser || !smtpPass) {
         return {
             statusCode: 500,
             body: JSON.stringify({ message: 'SMTP2GO credentials not configured.' })
+        };
+    }
+    if (!parentEmail || !senderEmail) {
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ message: 'Missing required email addresses.' })
         };
     }
 
@@ -34,18 +40,18 @@ exports.handler = async (event) => {
             pass: smtpPass
         },
         tls: {
-            rejectUnauthorized: false // Use this if you encounter self-signed certificate issues, but prefer true
+            rejectUnauthorized: false // Use this if you encounter self-signed certificate issues, but prefer true for production
         }
     });
 
     const mailOptions = {
         from: senderEmail,
-        to: recipientEmail, // The fixed email address where you want results
-        replyTo: parentEmail, // Allows you to reply directly to the parent
-        subject: `KS1 Assessment Results for ${childName}`,
-        text: `Parent Name: ${parentName}\nChild Name: ${childName}\nParent Email: ${parentEmail}\n\n${results}`,
-        // You could also create an HTML version of the email for better formatting
-        // html: `<p><strong>Parent Name:</strong> ${parentName}</p>...`
+        to: parentEmail,                     // Send to the parent's email
+        bcc: adminRecipientEmail,            // BCC a copy to your admin email
+        replyTo: parentEmail,                // Replies go to the parent
+        subject: `Key Stage 1 Assessment Results for ${childName}`,
+        text: resultsText,                   // Plain text version for compatibility
+        html: resultsHtml                    // HTML version for presentable formatting
     };
 
     try {

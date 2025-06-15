@@ -9,14 +9,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const overallScoreElement = document.getElementById('overallScore');
     const overallExpectationsElement = document.getElementById('overallExpectations');
     const timerDisplay = document.getElementById('time');
-    const sendEmailBtn = document.getElementById('sendEmailBtn');
+    const sendEmailBtn = document.getElementById('sendEmailBtn'); // Will be hidden for auto-send
     const emailStatus = document.getElementById('emailStatus');
 
     // --- User Info Storage ---
     let parentName = '';
     let childName = '';
     let parentEmail = '';
-    let assessmentSummary = ''; // To store results for emailing
+    let assessmentTextResults = ''; // To store plain text results for emailing
+    let assessmentHtmlResults = ''; // To store HTML results for emailing
 
     // --- Timer Variables ---
     const totalTime = 15 * 60; // 15 minutes in seconds
@@ -75,11 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         submitAssessment(); // Process results
     });
 
-    // 3. Send Email Button Click
-    sendEmailBtn.addEventListener('click', function() {
-        sendAssessmentEmail(parentName, childName, parentEmail, assessmentSummary);
-    });
-
     // --- Functions ---
 
     function startTimer() {
@@ -91,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                alert("Time's up! Submitting your assessment.");
+                // No alert, auto-submit
                 submitAssessment();
             }
         }, 1000);
@@ -100,7 +96,34 @@ document.addEventListener('DOMContentLoaded', () => {
     function submitAssessment() {
         let totalScore = 0;
         detailedResultsDiv.innerHTML = ''; // Clear previous results
-        assessmentSummary = `--- Assessment Results for ${childName} (Parent: ${parentName}) ---\n\n`;
+        assessmentTextResults = `--- Assessment Results for ${childName} (Parent: ${parentName}) ---\n\n`;
+        assessmentHtmlResults = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; }
+                    h2, h3, h4 { color: #0056b3; }
+                    .question-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
+                    .question-item:last-child { border-bottom: none; }
+                    .score-summary { text-align: center; margin-top: 25px; padding-top: 15px; border-top: 2px solid #007bff; }
+                    .correct { color: green; }
+                    .incorrect { color: red; }
+                    .expectation-meets { color: #28a745; font-weight: bold; }
+                    .expectation-below { color: #dc3545; font-weight: bold; }
+                    .expectation-above { color: #007bff; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h2>Key Stage 1 Assessment Results</h2>
+                    <p><strong>Parent Name:</strong> ${parentName}</p>
+                    <p><strong>Child Name:</strong> ${childName}</p>
+                    <p><strong>Parent Email:</strong> ${parentEmail}</p>
+                    <hr>
+                    <h3>Detailed Results:</h3>
+        `; // End of assessmentHtmlResults initial string
 
         const questions = [
             'q1', 'q2', 'q3', 'q4', 'q5',
@@ -149,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 expectationClass = 'expectation-below';
             }
 
-            // Append detailed results to the HTML
+            // Append detailed results to the HTML for display on page
             detailedResultsDiv.innerHTML += `
                 <div class="result-item">
                     <h4>${questionTitle}</h4>
@@ -160,16 +183,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // Append detailed results to the assessmentSummary string for email
-            assessmentSummary += `Question: ${questionTitle}\n`;
-            assessmentSummary += `  Your Answer: ${userAnswer}\n`;
-            assessmentSummary += `  Correct Answer: ${correctAns}\n`;
-            assessmentSummary += `  Score: ${score}/${maxPoints}\n`;
-            assessmentSummary += `  Expectations: ${expectationText}\n\n`;
+            // Append detailed results to the plain text summary for email
+            assessmentTextResults += `Question: ${questionTitle}\n`;
+            assessmentTextResults += `  Your Answer: ${userAnswer}\n`;
+            assessmentTextResults += `  Correct Answer: ${correctAns}\n`;
+            assessmentTextResults += `  Score: ${score}/${maxPoints}\n`;
+            assessmentTextResults += `  Expectations: ${expectationText}\n\n`;
+
+            // Append detailed results to the HTML summary for email
+            assessmentHtmlResults += `
+                <div class="question-item">
+                    <h4>${questionTitle}</h4>
+                    <p><strong>Your Answer:</strong> ${userAnswer}</p>
+                    <p><strong>Correct Answer:</strong> ${correctAns}</p>
+                    <p><strong>Score:</strong> ${score}/${maxPoints}</p>
+                    <p><strong>Expectations:</strong> <span class="${expectationClass}">${expectationText}</span></p>
+                </div>
+            `;
         });
 
         overallScoreElement.textContent = `Overall Score: ${totalScore}/15`;
-        assessmentSummary += `\nOverall Score: ${totalScore}/15\n`;
+        assessmentTextResults += `\nOverall Score: ${totalScore}/15\n`;
 
         let overallExpectations = '';
         let overallExpectationsClass = '';
@@ -184,16 +218,31 @@ document.addEventListener('DOMContentLoaded', () => {
             overallExpectationsClass = 'expectation-below';
         }
         overallExpectationsElement.innerHTML = `Overall Outcome: <span class="${overallExpectationsClass}">${overallExpectations}</span>`;
-        assessmentSummary += `Overall Outcome: ${overallExpectations}\n`;
+        assessmentTextResults += `Overall Outcome: ${overallExpectations}\n`;
 
+        // End of assessmentHtmlResults string
+        assessmentHtmlResults += `
+                    <div class="score-summary">
+                        <h3>Overall Score: ${totalScore}/15</h3>
+                        <h3>Overall Outcome: <span class="${overallExpectationsClass}">${overallExpectations}</span></h3>
+                    </div>
+                    <p>If you have any questions, please reply to this email.</p>
+                    <p>Best regards,<br/>[Your Organization Name or Your Name]</p>
+                </div>
+            </body>
+            </html>
+        `;
 
         assessmentSectionDiv.style.display = 'none'; // Hide assessment form
         resultsDiv.style.display = 'block';   // Show results
-        sendEmailBtn.style.display = 'block'; // Show the send email button
+
+        // --- Auto-send email and hide the button ---
+        sendEmailBtn.style.display = 'none'; // Hide the button
+        sendAssessmentEmail(parentName, childName, parentEmail, assessmentTextResults, assessmentHtmlResults);
     }
 
     // --- Send Email Function (Client-side, calls Netlify Function) ---
-    async function sendAssessmentEmail(parentName, childName, parentEmail, assessmentResults) {
+    async function sendAssessmentEmail(parentName, childName, parentEmail, resultsText, resultsHtml) {
         emailStatus.textContent = 'Sending email...';
         emailStatus.style.color = '#007bff'; // Blue for sending
 
@@ -207,14 +256,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     parentName: parentName,
                     childName: childName,
                     parentEmail: parentEmail,
-                    results: assessmentResults
+                    resultsText: resultsText, // Pass plain text results
+                    resultsHtml: resultsHtml  // Pass HTML results
                 }),
             });
 
             if (response.ok) {
                 emailStatus.textContent = 'Email sent successfully!';
                 emailStatus.style.color = '#28a745'; // Green for success
-                sendEmailBtn.disabled = true; // Disable button after successful send
             } else {
                 const errorData = await response.json();
                 console.error('Error sending email:', errorData.message);
