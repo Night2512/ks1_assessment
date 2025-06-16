@@ -89,6 +89,22 @@ button[type="submit"] {
     transition: background-color 0.3s ease;
 }
 
+.turnstile-container {
+    display: flex; /* Use flexbox for centering */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center horizontally */
+    margin-top: 20px; /* Add some space above the widget */
+    margin-bottom: 20px; /* Add some space below the widget */
+}
+
+/* You might want to adjust the small-text style if it's too wide */
+.small-text {
+    text-align: center;
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
 button[type="submit"]:hover {
     background-color: #218838;
 }

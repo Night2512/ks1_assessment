@@ -6,7 +6,7 @@ exports.handler = async (event) => {
     }
 
     // Updated to receive both text and HTML versions of results
-    const { parentName, childName, parentEmail, resultsText, resultsHtml } = JSON.parse(event.body);
+    const { parentName, childName, parentEmail, resultsText, resultsHtml, keyStage } = JSON.parse(event.body);
 
     // --- Configuration for SMTP2GO ---
     const smtpHost = process.env.SMTP2GO_HOST || 'mail.smtp2go.com';
@@ -49,7 +49,7 @@ exports.handler = async (event) => {
         to: parentEmail,                     // Send to the parent's email
         bcc: adminRecipientEmail,            // BCC a copy to your admin email
         replyTo: parentEmail,                // Replies go to the parent
-        subject: `Key Stage 1 Assessment Results for ${childName}`,
+        subject: `${keyStage} Assessment Results for ${childName}`,
         text: resultsText,                   // Plain text version for compatibility
         html: resultsHtml                    // HTML version for presentable formatting
     };

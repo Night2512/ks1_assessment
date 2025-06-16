@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Key Stage 1 Online Assessment - Mona Teaches</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -134,7 +135,14 @@
                     </div>
                 </section>
 
-                <button type="submit">Submit Assessment</button>
+                <div>
+                    <button type="submit" id="submitAssessmentBtn" disabled>Submit Assessment</button>
+                    <p></p>
+                    <div class="turnstile-container">
+                        <div class="cf-turnstile" data-sitekey="0x4AAAAAABhJZmNH0OLuZAif" data-callback="turnstileCallback" data-error-callback="turnstileErrorCallback"></div>
+                        <p class="small-text">Please complete the security check above.</p>
+                    </div>
+                </div>
             </form>
         </div>
 

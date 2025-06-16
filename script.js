@@ -11,11 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const timerDisplay = document.getElementById('time');
     const sendEmailBtn = document.getElementById('sendEmailBtn'); // Will be hidden for auto-send
     const emailStatus = document.getElementById('emailStatus');
+    const submitAssessmentBtn = document.getElementById('submitAssessmentBtn'); // Assuming you've added this ID to your submit button in index.html
 
     // --- User Info Storage ---
     let parentName = '';
     let childName = '';
     let parentEmail = '';
+    const CURRENT_KEY_STAGE = "Key Stage 1";
     let assessmentTextResults = ''; // To store plain text results for emailing
     let assessmentHtmlResults = ''; // To store HTML results for emailing
 
@@ -49,6 +51,34 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     // Total possible score is 7 + 8 = 15 points.
 
+    // --- Initial state for submit button ---
+    // The submit button for the assessment should be disabled until Turnstile is completed.
+    if (submitAssessmentBtn) {
+        submitAssessmentBtn.disabled = true;
+    }
+
+    // --- Callback for Cloudflare Turnstile ---
+    // This function is called by the Turnstile widget when it successfully completes its challenge.
+    window.turnstileCallback = function(token) {
+        if (submitAssessmentBtn) {
+            submitAssessmentBtn.disabled = false; // Enable the submit button
+        }
+    };
+
+    // --- Error Callback for Cloudflare Turnstile ---
+    // This function is called if the Turnstile widget encounters an error.
+    window.turnstileErrorCallback = function() {
+        if (submitAssessmentBtn) {
+            submitAssessmentBtn.disabled = true; // Keep the button disabled on error
+        }
+        alert('Security check failed. Please refresh the page and try again.');
+        // Optionally, force a reset if the Turnstile API allows it or re-render
+        if (typeof turnstile !== 'undefined' && turnstile.reset) {
+            turnstile.reset();
+        }
+    };
+
+
     // --- Event Listeners ---
 
     // 1. Info Form Submission (Start Assessment)
@@ -69,11 +99,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. Assessment Form Submission
-    assessmentForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        clearInterval(timerInterval); // Stop the timer
-        submitAssessment(); // Process results
+    // 2. Assessment Form Submission (Modified for Turnstile)
+    assessmentForm.addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Get the Turnstile response token
+        const turnstileToken = document.querySelector('[name="cf-turnstile-response"]').value;
+
+        if (!turnstileToken) {
+            alert('Please complete the security check.');
+            // Optionally, reset turnstile if it's there
+            if (typeof turnstile !== 'undefined' && turnstile.reset) {
+                turnstile.reset();
+            }
+            if (submitAssessmentBtn) {
+                submitAssessmentBtn.disabled = true;
+            }
+            return;
+        }
+
+        // Send data to Netlify function for server-side Turnstile verification
+        try {
+            const verificationResponse = await fetch('/.netlify/functions/verify-turnstile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ turnstileToken: turnstileToken }),
+            });
+
+            const verificationResult = await verificationResponse.json();
+
+            if (verificationResult.success) {
+                // Turnstile verification successful, proceed with assessment submission
+                clearInterval(timerInterval); // Stop the timer
+                submitAssessment(); // Process results
+            } else {
+                alert('Security check failed. Please try again.');
+                console.error('Turnstile verification failed:', verificationResult.errors);
+                // Reset Turnstile widget to allow user to try again
+                if (typeof turnstile !== 'undefined' && turnstile.reset) {
+                    turnstile.reset();
+                }
+                if (submitAssessmentBtn) {
+                    submitAssessmentBtn.disabled = true;
+                }
+            }
+        } catch (error) {
+            console.error('Error during Turnstile verification:', error);
+            alert('An error occurred during security check. Please try again.');
+            if (typeof turnstile !== 'undefined' && turnstile.reset) {
+                turnstile.reset();
+            }
+            if (submitAssessmentBtn) {
+                submitAssessmentBtn.disabled = true;
+            }
+        }
     });
 
     // --- Functions ---
