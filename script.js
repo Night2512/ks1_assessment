@@ -374,8 +374,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     childName: childName,
                     parentEmail: parentEmail,
                     resultsText: resultsText, // Pass plain text results
-                    resultsHtml: resultsHtml,  // Pass HTML results
-                    keyStage: keyStage // Pass keyStage to the backend
+                    resultsHtml: resultsHtml,
+                    keyStage: CURRENT_KEY_STAGE  // Pass HTML results
                 }),
             });
 
