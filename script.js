@@ -37,10 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
         q5: 'Buster loves to run in the park.', // Sentence construction (case-sensitive for Above)
         q6: 'flies', // Verb in "The bird flies high." (case-insensitive)
         q7: 'b', // small
-        q8: 'bee', // Rhymes with tree (accept common rhymes) - I'll use 'bee' as primary
+        q8: 'a', // Rhymes with tree (accept common rhymes) - I'll use 'bee' as primary
         q9: 'book', // Suitable word for "read a good ____." (e.g., 'book', 'story')
         q10: 'c', // table
-        q11: 'ball', // Missing word in "The children like to play with their new b___." (case-insensitive)
+        q11: 'a', // Missing word in "The children like to play with their new b___." (case-insensitive)
         q12: 'The sky is blue.', // Sentence with 'blue' (flexible check for presence of 'blue')
         q13: "I'm", // Contraction for 'I am' (case-insensitive, includes apostrophe)
 
