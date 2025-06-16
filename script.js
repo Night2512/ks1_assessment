@@ -11,45 +11,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const timerDisplay = document.getElementById('time');
     const sendEmailBtn = document.getElementById('sendEmailBtn'); // Will be hidden for auto-send
     const emailStatus = document.getElementById('emailStatus');
-    const submitAssessmentBtn = document.getElementById('submitAssessmentBtn'); // Assuming you've added this ID to your submit button in index.html
+    const submitAssessmentBtn = document.getElementById('submitAssessmentBtn');
 
     // --- User Info Storage ---
     let parentName = '';
     let childName = '';
     let parentEmail = '';
-    const CURRENT_KEY_STAGE = "Key Stage 1";
+											
     let assessmentTextResults = ''; // To store plain text results for emailing
     let assessmentHtmlResults = ''; // To store HTML results for emailing
+    const CURRENT_KEY_STAGE = "Key Stage 1"; // Define the current Key Stage
 
     // --- Timer Variables ---
     const totalTime = 15 * 60; // 15 minutes in seconds
     let timeLeft = totalTime;
     let timerInterval;
 
-    // --- Assessment Data ---
+    // --- Assessment Data (UPDATED FOR KS1 - 30 QUESTIONS, ORIGINAL QUESTIONS PRESERVED) ---
     const correctAnswers = {
-        // English
+        // Original English Questions (Q1-Q5)
         q1: 'b', // Snowdrop
         q2: 'c', // White
         q3: 'cats',  // Plural of cat (case-insensitive in check)
         q4: 'dog',   // Spelling (case-insensitive in check)
         q5: 'Buster loves to run in the park.', // Sentence construction (case-sensitive for Above)
+        q6: 'flies', // Verb in "The bird flies high." (case-insensitive)
+        q7: 'b', // small
+        q8: 'bee', // Rhymes with tree (accept common rhymes) - I'll use 'bee' as primary
+        q9: 'book', // Suitable word for "read a good ____." (e.g., 'book', 'story')
+        q10: 'c', // table
+        q11: 'ball', // Missing word in "The children like to play with their new b___." (case-insensitive)
+        q12: 'The sky is blue.', // Sentence with 'blue' (flexible check for presence of 'blue')
+        q13: "I'm", // Contraction for 'I am' (case-insensitive, includes apostrophe)
 
-        // Maths
-        q6: 'b', // 13 apples
-        q7: 12,   // 7 + 5
-        q8: 7,    // 10 - 3
-        q9: 5,    // 5 + 5 = 10
-        q10: 'b', // 3 o'clock
-        q11: 10,  // 6 + 4
-        q12: 'c'  // 1/4
+        // Original Maths Questions (Q6-Q12)
+        q14: 'b', // 13 apples
+        q15: 12,   // 7 + 5
+        q16: 7,    // 10 - 3
+        q17: 5,    // 5 + 5 = 10
+        q18: 'b', // 3 o'clock
+        q19: 10,  // 6 + 4
+        q20: 'c',  // 1/4
+        q21: 4, // Corners of a square
+        q22: 6, // 2 + 2 + 2
+        q23: 4, // 7 - 3
+        q24: 6, // Half of 12
+        q25: 20, // Count by 5s
+        q26: 'rectangle', // Shape of a regular door (case-insensitive)
+        q27: 7, // Days in a week
+        q28: 10, // 15 take away 5
+        q29: 'b', // Brick
+        q30: 8 // 4 groups of 2
     };
+												 
 
-    const questionPoints = {
-        q1: 1, q2: 1, q3: 1, q4: 1, q5: 3, // English (1+1+1+1+3 = 7 points)
-        q6: 1, q7: 1, q8: 1, q9: 1, q10: 1, q11: 2, q12: 1  // Maths (1+1+1+1+1+2+1 = 8 points)
-    };
-    // Total possible score is 7 + 8 = 15 points.
+    // All questions are 1 point for simplicity, making total score out of 30.
+    const questionPoints = Array.from({length: 30}, (_, i) => ({[`q${i + 1}`]: 1}))
+        .reduce((acc, curr) => ({...acc, ...curr}), {});
+    // Total possible score is 30 points.
 
     // --- Initial state for submit button ---
     // The submit button for the assessment should be disabled until Turnstile is completed.
@@ -177,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function submitAssessment() {
         let totalScore = 0;
         detailedResultsDiv.innerHTML = ''; // Clear previous results
-        assessmentTextResults = `--- Assessment Results for ${childName} (Parent: ${parentName}) ---\n\n`;
+        assessmentTextResults = `--- Key Stage 1 Assessment Results for ${childName} (Parent: ${parentName}) ---\n\n`;
         assessmentHtmlResults = `
             <!DOCTYPE html>
             <html>
@@ -207,8 +226,10 @@ document.addEventListener('DOMContentLoaded', () => {
         `; // End of assessmentHtmlResults initial string
 
         const questions = [
-            'q1', 'q2', 'q3', 'q4', 'q5',
-            'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12'
+            'q1', 'q2', 'q3', 'q4', 'q5', // Original English
+            'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12', 'q13', // New English
+            'q14', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20', // Original Maths
+            'q21', 'q22', 'q23', 'q24', 'q25', 'q26', 'q27', 'q28', 'q29', 'q30' // New Maths
         ];
 
         questions.forEach(qId => {
@@ -217,40 +238,55 @@ document.addEventListener('DOMContentLoaded', () => {
             let score = 0;
             const correctAns = correctAnswers[qId];
             const maxPoints = questionPoints[qId];
-            let expectationText = '';
-            let expectationClass = '';
+            let outcomeText = '';
+            let outcomeClass = '';
 
             const qElement = document.getElementById(qId);
             const questionTitle = qElement ? qElement.querySelector('h3').textContent : `Question ${qId.toUpperCase()}`;
 
-            // Handle different input types
-            if (['q1', 'q2', 'q6', 'q10', 'q12'].includes(qId)) { // Radio buttons
+            const inputField = document.querySelector(`[name="${qId}_answer"]`);
+            if (!inputField) {
+                userAnswer = 'N/A (Input field not found)';
+                isCorrect = false;
+            } else if (inputField.type === 'radio') {
                 const selectedRadio = document.querySelector(`input[name="${qId}_answer"]:checked`);
                 userAnswer = selectedRadio ? selectedRadio.value : 'No Answer';
                 isCorrect = (userAnswer === correctAns);
-            } else if (['q3', 'q4', 'q5'].includes(qId)) { // Text inputs
-                userAnswer = document.querySelector(`input[name="${qId}_answer"]`).value.trim();
-                // For text answers, make comparison case-insensitive
-                isCorrect = (userAnswer.toLowerCase() === String(correctAns).toLowerCase());
-            } else if (['q7', 'q8', 'q9', 'q11'].includes(qId)) { // Number inputs
-                userAnswer = parseInt(document.querySelector(`input[name="${qId}_answer"]`).value, 10);
+            } else if (inputField.type === 'text') {
+                userAnswer = inputField.value.trim();
+                // Special handling for specific text questions for flexible comparison
+                if (qId === 'q5') { // For sentence question q5
+                    // Check if keywords are present, or a general match (very basic)
+                    isCorrect = userAnswer.toLowerCase().includes('buster') && userAnswer.toLowerCase().includes('run') && userAnswer.toLowerCase().includes('park') && userAnswer.length > 5;
+                } else if (qId === 'q12') { // For sentence question q12
+                    isCorrect = userAnswer.toLowerCase().includes('blue') && userAnswer.length > 5;
+                }
+                else if (qId === 'q3' || qId === 'q4' || qId === 'q6' || qId === 'q8' || qId === 'q9' || qId === 'q11' || qId === 'q13' || qId === 'q26') {
+                    // For other text questions, case-insensitive exact match
+                    isCorrect = (userAnswer.toLowerCase() === String(correctAns).toLowerCase());
+                } else {
+                    // Default for other text inputs (if any)
+                    isCorrect = (userAnswer.toLowerCase() === String(correctAns).toLowerCase());
+                }
+            } else if (inputField.type === 'number') {
+                userAnswer = parseInt(inputField.value, 10);
                 isCorrect = (userAnswer === correctAns);
             }
 
             if (isCorrect) {
                 score = maxPoints;
                 totalScore += score;
-                expectationText = 'Meets Expectations';
-                expectationClass = 'expectation-meets';
-                // Specific "Above Expectations" logic for Sentence Construction (q5)
-                if (qId === 'q5' && userAnswer === correctAns) { // Case-sensitive check for q5's "Above Expectations"
-                    expectationText = 'Above Expectations';
-                    expectationClass = 'expectation-above';
-                }
+                outcomeText = 'Correct';
+                outcomeClass = 'correct';
+																					 
+																													  
+														   
+														   
+				 
             } else {
                 score = 0;
-                expectationText = 'Below Expectations';
-                expectationClass = 'expectation-below';
+                outcomeText = 'Incorrect';
+                outcomeClass = 'incorrect';
             }
 
             // Append detailed results to the HTML for display on page
@@ -260,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p><strong>Your Answer:</strong> ${userAnswer}</p>
                     <p><strong>Correct Answer:</strong> ${correctAns}</p>
                     <p><strong>Score:</strong> ${score}/${maxPoints}</p>
-                    <p><strong>Expectations:</strong> <span class="${expectationClass}">${expectationText}</span></p>
+                    <p><strong>Outcome:</strong> <span class="${outcomeClass}">${outcomeText}</span></p>
                 </div>
             `;
 
@@ -269,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
             assessmentTextResults += `  Your Answer: ${userAnswer}\n`;
             assessmentTextResults += `  Correct Answer: ${correctAns}\n`;
             assessmentTextResults += `  Score: ${score}/${maxPoints}\n`;
-            assessmentTextResults += `  Expectations: ${expectationText}\n\n`;
+            assessmentTextResults += `  Outcome: ${outcomeText}\n\n`;
 
             // Append detailed results to the HTML summary for email
             assessmentHtmlResults += `
@@ -278,23 +314,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p><strong>Your Answer:</strong> ${userAnswer}</p>
                     <p><strong>Correct Answer:</strong> ${correctAns}</p>
                     <p><strong>Score:</strong> ${score}/${maxPoints}</p>
-                    <p><strong>Expectations:</strong> <span class="${expectationClass}">${expectationText}</span></p>
+                    <p><strong>Outcome:</strong> <span class="${outcomeClass}">${outcomeText}</span></p>
                 </div>
             `;
         });
 
-        overallScoreElement.textContent = `Overall Score: ${totalScore}/15`;
-        assessmentTextResults += `\nOverall Score: ${totalScore}/15\n`;
+        overallScoreElement.textContent = `Overall Score: ${totalScore}/30`;
+        assessmentTextResults += `\nOverall Score: ${totalScore}/30\n`;
 
         let overallExpectations = '';
         let overallExpectationsClass = '';
-        if (totalScore >= 13) {
+        if (totalScore >= 26) { // Above Expectations (approx. 85%+)
             overallExpectations = 'Above Expectations (Excellent understanding)';
             overallExpectationsClass = 'expectation-above';
-        } else if (totalScore >= 9) {
+        } else if (totalScore >= 18) { // Meets Expectations (approx. 60%+)
             overallExpectations = 'Meets Expectations (Good understanding)';
             overallExpectationsClass = 'expectation-meets';
-        } else {
+        } else { // Below Expectations
             overallExpectations = 'Below Expectations (Needs more support)';
             overallExpectationsClass = 'expectation-below';
         }
@@ -304,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // End of assessmentHtmlResults string
         assessmentHtmlResults += `
                     <div class="score-summary">
-                        <h3>Overall Score: ${totalScore}/15</h3>
+                        <h3>Overall Score: ${totalScore}/30</h3>
                         <h3>Overall Outcome: <span class="${overallExpectationsClass}">${overallExpectations}</span></h3>
                     </div>
                     <p>If you have any questions, please reply to this email.</p>
@@ -319,11 +355,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- Auto-send email and hide the button ---
         sendEmailBtn.style.display = 'none'; // Hide the button
-        sendAssessmentEmail(parentName, childName, parentEmail, assessmentTextResults, assessmentHtmlResults);
+        sendAssessmentEmail(parentName, childName, parentEmail, assessmentTextResults, assessmentHtmlResults, CURRENT_KEY_STAGE);
     }
 
     // --- Send Email Function (Client-side, calls Netlify Function) ---
-    async function sendAssessmentEmail(parentName, childName, parentEmail, resultsText, resultsHtml) {
+    async function sendAssessmentEmail(parentName, childName, parentEmail, resultsText, resultsHtml, keyStage) {
         emailStatus.textContent = 'Sending email...';
         emailStatus.style.color = '#007bff'; // Blue for sending
 
@@ -338,7 +374,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     childName: childName,
                     parentEmail: parentEmail,
                     resultsText: resultsText, // Pass plain text results
-                    resultsHtml: resultsHtml  // Pass HTML results
+                    resultsHtml: resultsHtml,  // Pass HTML results
+                    keyStage: keyStage // Pass keyStage to the backend
                 }),
             });
 

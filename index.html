@@ -34,7 +34,7 @@
             </form>
         </div>
 
-        <div id="assessmentSection" style="display:none;">
+        <div id="assessmentSection" class="section" style="display: none;">
             <p class="timer-display">Time Left: <span id="time">15:00</span></p>
             <p><strong>Total Time: 15 Minutes</strong></p>
 
@@ -65,7 +65,7 @@
                     <div class="question-block" id="q3">
                         <h3>Question 3: Grammar - Plurals</h3>
                         <p>Fill in the missing word: </p>
-						<p>Lily gets a second fluffy white cat. Now she has two fluffy white ____. <input type="text" name="q3_answer"></p>
+                        <p>Lily gets a second fluffy white cat. Now she has two fluffy white ____. <input type="text" name="q3_answer"></p>
                     </div>
 
                     <div class="question-block" id="q4">
@@ -79,63 +79,157 @@
                         <p>Put the words in the correct order to make a sentence: park., to, in, run, loves, Buster, the</p>
                         <input type="text" name="q5_answer">
                     </div>
-                </section>
-
-                <section class="section">
-                    <h2>Section 2: Maths</h2>
 
                     <div class="question-block" id="q6">
-                        <h3>Question 6: Counting</h3>
-                        <img src="images/13_apples.jpg" alt="13 apples" style="max-width: 150px; display: block; margin-bottom: 10px;">
-                        <p>How many apples are there?</p>
-                        <label><input type="radio" name="q6_answer" value="a"> a) 11</label><br>
-                        <label><input type="radio" name="q6_answer" value="b"> b) 13</label><br>
-                        <label><input type="radio" name="q6_answer" value="c"> c) 15</label>
+                        <h3>Q6. Identify the verb in the sentence: "The bird flies high."</h3>
+                        <input type="text" name="q6_answer" placeholder="Type your answer">
                     </div>
 
                     <div class="question-block" id="q7">
-                        <h3>Question 7: Addition</h3>
-                        <p>What is 7 + 5?</p>
-                        <input type="number" name="q7_answer">
+                        <h3>Q7. What is the opposite of 'big'?</h3>
+                        <label><input type="radio" name="q7_answer" value="a"> large</label><br>
+                        <label><input type="radio" name="q7_answer" value="b"> small</label><br>
+                        <label><input type="radio" name="q7_answer" value="c"> huge</label>
                     </div>
 
                     <div class="question-block" id="q8">
-                        <h3>Question 8: Subtraction</h3>
-                        <p>What is 10 - 3?</p>
-                        <input type="number" name="q8_answer">
+                        <h3>Q8. Write a word that rhymes with 'tree'.</h3>
+                        <input type="text" name="q8_answer" placeholder="Type your answer">
                     </div>
 
                     <div class="question-block" id="q9">
-                        <h3>Question 9: Number Bonds to 10</h3>
-                        <p>5 + <input type="number" name="q9_answer" class="small-input"> = 10</p>
+                        <h3>Q9. Complete the sentence: "I like to read a good _____."</h3>
+                        <input type="text" name="q9_answer" placeholder="Type a suitable word">
                     </div>
 
                     <div class="question-block" id="q10">
-                        <h3>question 10: Telling Time</h3>
-                        <img src="images/clock_3_oclock.png" alt="Clock showing 3 o'clock" style="max-width: 150px; display: block; margin-bottom: 10px;">
-                        <p>What time does the clock show?</p>
-                        <label><input type="radio" name="q10_answer" value="a"> a) 1 o'clock</label><br>
-                        <label><input type="radio" name="q10_answer" value="b"> b) 3 o'clock</label><br>
-                        <label><input type="radio" name="q10_answer" value="c"> c) 6 o'clock</label>
+                        <h3>Q10. Which word is a noun?</h3>
+                        <label><input type="radio" name="q10_answer" value="a"> run</label><br>
+                        <label><input type="radio" name="q10_answer" value="b"> quickly</label><br>
+                        <label><input type="radio" name="q10_answer" value="c"> table</label>
                     </div>
 
                     <div class="question-block" id="q11">
-                        <h3>Question 11: Simple Word Problem</h3>
-                        <p>Sarah has 6 red pens and 4 blue pens. How many pens does she have altogether?</p>
-                        <input type="number" name="q11_answer">
+                        <h3>Q11. Spell the missing word: "The children like to play with their new b___."</h3>
+                        <input type="text" name="q11_answer" placeholder="Type your answer">
                     </div>
 
                     <div class="question-block" id="q12">
-                        <h3>Question 12: Fractions</h3>
-                        <img src="images/shaded_circle.png" alt="Circle with 1/4 shaded" style="max-width: 150px; display: block; margin-bottom: 10px;">
-                        <p>What fraction of the circle is shaded?</p>
-                        <label><input type="radio" name="q12_answer" value="a"> a) 1/2</label><br>
-                        <label><input type="radio" name="q12_answer" value="b"> b) 1/3</label><br>
-                        <label><input type="radio" name="q12_answer" value="c"> c) 1/4</label>
+                        <h3>Q12. Write a sentence using the word 'blue'.</h3>
+                        <input type="text" name="q12_answer" placeholder="Type your sentence">
+                    </div>
+
+                    <div class="question-block" id="q13">
+                        <h3>Q13. What is the contraction for 'I am'?</h3>
+                        <input type="text" name="q13_answer" placeholder="Type your answer">
                     </div>
                 </section>
 
-                <div>
+                <section>
+                    <h2>Section 2: Maths</h2>
+                    <div class="question-block" id="q14">
+                        <h3>Q14: Addition</h3>
+						<img src="images/13_apples.jpg" alt="13 apples" style="max-width: 150px; display: block; margin-bottom: 10px;">
+                        <p>How many apples are there?</p>
+                        <label><input type="radio" name="q14_answer" value="a"> a) 11</label><br>
+                        <label><input type="radio" name="q14_answer" value="b"> b) 13</label><br>
+                        <label><input type="radio" name="q14_answer" value="c"> c) 15</label>
+                    </div>
+					
+                    <div class="question-block" id="q15">
+                        <h3>Q15: Addition</h3>
+                        <p>What is 7 + 5?</p>
+                        <input type="number" name="q15_answer">
+                    </div>
+
+                    <div class="question-block" id="q16">
+                        <h3>Q16: Subtraction</h3>
+                        <p>What is 10 - 3?</p>
+                        <input type="number" name="q16_answer">
+                    </div>
+
+                    <div class="question-block" id="q17">
+                        <h3>Q17: Number Bonds to 10</h3>
+                        <p>5 + <input type="number" name="q17_answer" class="small-input"> = 10</p>
+                    </div>
+
+                    <div class="question-block" id="q18">
+                        <h3>Q18: Telling Time</h3>
+                        <img src="images/clock_3_oclock.png" alt="Clock showing 3 o'clock" style="max-width: 150px; display: block; margin-bottom: 10px;">
+                        <p>What time does the clock show?</p>
+                        <label><input type="radio" name="q18_answer" value="a"> a) 1 o'clock</label><br>
+                        <label><input type="radio" name="q18_answer" value="b"> b) 3 o'clock</label><br>
+                        <label><input type="radio" name="q18_answer" value="c"> c) 6 o'clock</label>
+                    </div>
+
+                    <div class="question-block" id="q19">
+                        <h3>Q19: Simple Word Problem</h3>
+                        <p>Sarah has 6 red pens and 4 blue pens. How many pens does she have altogether?</p>
+                        <input type="number" name="q19_answer">
+                    </div>
+
+                    <div class="question-block" id="q20">
+                        <h3>Q20: Fractions</h3>
+                        <img src="images/shaded_circle.png" alt="Circle with 1/4 shaded" style="max-width: 150px; display: block; margin-bottom: 10px;">
+                        <p>What fraction of the circle is shaded?</p>
+                        <label><input type="radio" name="q20_answer" value="a"> a) 1/2</label><br>
+                        <label><input type="radio" name="q20_answer" value="b"> b) 1/3</label><br>
+                        <label><input type="radio" name="q20_answer" value="c"> c) 1/4</label>
+                    </div>
+
+                    <div class="question-block" id="q21">
+                        <h3>Q21. How many corners does a square have?</h3>
+                        <input type="number" name="q21_answer" placeholder="Enter number">
+                    </div>
+
+                    <div class="question-block" id="q22">
+                        <h3>Q22. What is 2 + 2 + 2?</h3>
+                        <input type="number" name="q22_answer" placeholder="Enter number">
+                    </div>
+
+                    <div class="question-block" id="q23">
+                        <h3>Q23. If you have 7 balloons and 3 pop, how many are left?</h3>
+                        <input type="number" name="q23_answer" placeholder="Enter number">
+                    </div>
+
+                    <div class="question-block" id="q24">
+                        <h3>Q24. Half of 12 is?</h3>
+                        <input type="number" name="q24_answer" placeholder="Enter number">
+                    </div>
+
+                    <div class="question-block" id="q25">
+                        <h3>Q25. Count by 5s: 5, 10, 15, ___?</h3>
+                        <input type="number" name="q25_answer" placeholder="Enter number">
+                    </div>
+
+                    <div class="question-block" id="q26">
+                        <h3>Q26. What shape is a regular door?</h3>
+                        <input type="text" name="q26_answer" placeholder="Type your answer">
+                    </div>
+
+                    <div class="question-block" id="q27">
+                        <h3>Q27. How many days are in a week?</h3>
+                        <input type="number" name="q27_answer" placeholder="Enter number">
+                    </div>
+
+                    <div class="question-block" id="q28">
+                        <h3>Q28. What is 15 take away 5?</h3>
+                        <input type="number" name="q28_answer" placeholder="Enter number">
+                    </div>
+
+                    <div class="question-block" id="q29">
+                        <h3>Q29. Which is heavier, a feather or a brick?</h3>
+                        <label><input type="radio" name="q29_answer" value="a"> a) Feather</label><br>
+                        <label><input type="radio" name="q29_answer" value="b"> b) Brick</label>
+                    </div>
+
+                    <div class="question-block" id="q30">
+                        <h3>Q30. If you have 4 groups of 2 objects, how many objects do you have in total?</h3>
+                        <input type="number" name="q30_answer" placeholder="Enter number">
+                    </div>
+                </section>
+
+				<div>
                     <button type="submit" id="submitAssessmentBtn" disabled>Submit Assessment</button>
                     <p></p>
                     <div class="turnstile-container">
@@ -152,7 +246,8 @@
             <h3 id="overallScore"></h3>
             <h3 id="overallExpectations"></h3>
             <button id="sendEmailBtn" style="display:none;">Send Results to Parents</button>
-            <p id="emailStatus" style="margin-top: 10px;"></p> </div>
+            <p id="emailStatus" style="margin-top: 10px;"></p>
+        </div>
     </div>
 
     <script src="script.js"></script>
