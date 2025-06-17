@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3>Overall Outcome: <span class="${overallExpectationsClass}">${overallExpectations}</span></h3>
                     </div>
                     <p>If you have any questions, please reply to this email.</p>
-                    <p>Best regards,<br/>[Your Organization Name or Your Name]</p>
+                    <p>Best regards,<br/>Mona Teaches</p>
                 </div>
             </body>
             </html>
